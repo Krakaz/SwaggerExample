@@ -87,7 +87,7 @@ namespace SwaggerExample.Controllers
         [HttpPost]
         [Produces("application/json")]
         [ProducesResponseType(201)]
-        [ProducesResponseType(400)]
+        [ProducesResponseType(typeof(Error), 400)]
         public ActionResult<Pet> Post([FromBody] Pet value)
         {
             value.Id = 100;
@@ -106,7 +106,7 @@ namespace SwaggerExample.Controllers
         [HttpPut("{id}")]
         [Produces("application/json")]
         [ProducesResponseType(200)]
-        [ProducesResponseType(400)]
+        [ProducesResponseType(typeof(Error), 400)]
         public ActionResult<Pet> Put(int id, [FromBody] Pet value)
         {
             return value;
