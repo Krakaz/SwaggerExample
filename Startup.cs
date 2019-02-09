@@ -33,12 +33,24 @@ namespace SwaggerExample
             // Регистрирует генератор Swagger
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new Info { Title = "Swagger Example API", Version = "v1" });
+                c.SwaggerDoc("v1", new Info
+                {
+                    Version = "v1",
+                    Title = "Swagger Example API",
+                    Description = "Пример использования Swagger в ASP.NET Core Web API",
+                    TermsOfService = "None",
+                    Contact = new Contact
+                    {
+                        Name = "Денис Кузнецов",
+                        Email = "denis.kuznetcov@simbirsoft.com",
+                        Url = "https://www.linkedin.com/in/DKuznetsovDotNet/"
+                    }
+                });
                 c.DescribeAllEnumsAsStrings();
                 // Добавить комментарии для Swagger JSON и UI.
                 var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-                c.IncludeXmlComments(xmlPath);                
+                c.IncludeXmlComments(xmlPath);
             });
         }
 
@@ -54,6 +66,8 @@ namespace SwaggerExample
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
+            app.UseStaticFiles();
 
             // Включает middleware для генерации документации в JSON формате
             app.UseSwagger();
