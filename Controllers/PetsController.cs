@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using SwaggerExample.Models;
 using SwaggerExample.Models.Enums;
@@ -12,9 +10,10 @@ namespace SwaggerExample.Controllers
     [ApiController]
     public class PetsController : ControllerBase
     {
-        private readonly List<Pet> pets = new List<Pet> {
-                new Pet { Id = 1, Name = "Снуппи", Category = new Category { Id = 1, Name = "Сиамский кот" }, Status = Statuses.Available, Tags = new List<Tag> { new Tag { Id = 1, Name = "Ласковый" }, new Tag { Id = 2, Name = "Игривый"} } },
-                new Pet { Id = 2, Name = "Персиваль", Category = new Category { Id = 5, Name = "Ласка" }, Status = Statuses.Expected, Tags = new List<Tag> { new Tag { Id = 10, Name = "Очень активный" }, new Tag { Id = 2, Name = "Игривый"} } }
+        private readonly List<Pet> pets = new List<Pet>
+        {
+                new Pet { Id = 1, Name = "Снуппи", Category = new Category { Id = 1, Name = "Сиамский кот" }, Status = Statuses.Available, Tags = new List<Tag> { new Tag { Id = 1, Name = "Ласковый" }, new Tag { Id = 2, Name = "Игривый" } } },
+                new Pet { Id = 2, Name = "Персиваль", Category = new Category { Id = 5, Name = "Ласка" }, Status = Statuses.Expected, Tags = new List<Tag> { new Tag { Id = 10, Name = "Очень активный" }, new Tag { Id = 2, Name = "Игривый" } } }
             };
 
         /// <summary>
@@ -31,6 +30,7 @@ namespace SwaggerExample.Controllers
         }
 
         // GET api/values/5
+
         /// <summary>
         /// Получает информацию по животному по идентификатору
         /// </summary>
@@ -47,12 +47,14 @@ namespace SwaggerExample.Controllers
             var pet = pets.SingleOrDefault(el => el.Id == id);
             if (pet == null)
             {
-                return BadRequest(new Error { Code = 404, ErrorMessage = "Животное отсутствует в БД" });
+                return NotFound(new Error { Code = 404, ErrorMessage = "Животное отсутствует в БД" });
             }
+
             return Ok(pet);
         }
 
         // POST api/values
+
         /// <summary>
         /// Добавляет нового животного
         /// </summary>
@@ -95,6 +97,7 @@ namespace SwaggerExample.Controllers
         }
 
         // PUT api/values/5
+
         /// <summary>
         /// Изменияе существующего животного
         /// </summary>
@@ -113,6 +116,7 @@ namespace SwaggerExample.Controllers
         }
 
         // DELETE api/values/5
+
         /// <summary>
         /// Удаляет животное из системы
         /// </summary>
