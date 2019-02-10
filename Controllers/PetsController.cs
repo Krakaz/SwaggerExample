@@ -2,6 +2,7 @@
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using SwaggerExample.Models;
+using SwaggerExample.Models.Conventions;
 using SwaggerExample.Models.Enums;
 
 namespace SwaggerExample.Controllers
@@ -27,6 +28,19 @@ namespace SwaggerExample.Controllers
         public ActionResult<IEnumerable<Pet>> Get()
         {
             return pets;
+        }
+
+        /// <summary>
+        /// Запрашивает список животных по фильтру
+        /// </summary>
+        /// <returns>Возвращает список животных соответствующих фильтру</returns>
+        [HttpPost("find")]
+        [Produces("application/json")]
+        [ApiConventionMethod(typeof(SwaggerExampleConventions),
+                     nameof(SwaggerExampleConventions.Find))]
+        public ActionResult<IEnumerable<Pet>> Get(PetFilter filter)
+        {
+            return pets.Where(el => el.Name.IndexOf(filter.Name) != -1).ToList();
         }
 
         // GET api/values/5
