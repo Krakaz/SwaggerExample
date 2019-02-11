@@ -47,6 +47,29 @@ namespace SwaggerExample
                     }
                 });
                 c.DescribeAllEnumsAsStrings();
+                c.AddSecurityDefinition("Bearer", new ApiKeyScheme()
+                {
+                    Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
+                    Name = "Authorization",
+                    In = "header",
+                    Type = "apiKey"
+                });
+                c.AddSecurityRequirement(new Dictionary<string, IEnumerable<string>>
+                {
+                    { "Bearer", new string[] { } }
+                });
+ 
+                c.AddSecurityDefinition("AdditionaHeaderData", new ApiKeyScheme()
+                {
+                    Description = "Based on API demand",
+                    Name = "AdditionaHeaderData",
+                    In = "header",
+                    Type = "apiKey"
+                });
+                c.AddSecurityRequirement(new Dictionary<string, IEnumerable<string>>
+                {
+                    { "AdditionaHeaderData", new string[] { } }
+                });
                 // Добавить комментарии для Swagger JSON и UI.
                 var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
