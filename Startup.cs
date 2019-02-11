@@ -8,11 +8,14 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using SwaggerExample.Models;
 using Swashbuckle.AspNetCore.Swagger;
+using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace SwaggerExample
 {
@@ -30,26 +33,18 @@ namespace SwaggerExample
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
+            services.AddApiVersioning();
+            services.AddVersionedApiExplorer(options => options.GroupNameFormat = "'v'VVV");
+            services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
+
             // Регистрирует генератор Swagger
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new Info
-                {
-                    Version = "v1",
-                    Title = "Swagger Example API",
-                    Description = "Пример использования Swagger в ASP.NET Core Web API",
-                    TermsOfService = "None",
-                    Contact = new Contact
-                    {
-                        Name = "Денис Кузнецов",
-                        Email = "denis.kuznetcov@simbirsoft.com",
-                        Url = "https://www.linkedin.com/in/DKuznetsovDotNet/"
-                    }
-                });
                 c.DescribeAllEnumsAsStrings();
                 c.AddSecurityDefinition("Bearer", new ApiKeyScheme()
                 {
-                    Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
+                    Description =
+                        "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
                     Name = "Authorization",
                     In = "header",
                     Type = "apiKey"
@@ -58,7 +53,7 @@ namespace SwaggerExample
                 {
                     { "Bearer", new string[] { } }
                 });
- 
+
                 c.AddSecurityDefinition("AdditionaHeaderData", new ApiKeyScheme()
                 {
                     Description = "Based on API demand",
@@ -78,7 +73,7 @@ namespace SwaggerExample
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IApiVersionDescriptionProvider provider)
         {
             if (env.IsDevelopment())
             {
@@ -100,6 +95,12 @@ namespace SwaggerExample
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "Swagger Example API");
                 c.RoutePrefix = string.Empty;
+                foreach ( var description in provider.ApiVersionDescriptions )
+                {
+                    c.SwaggerEndpoint(
+                        $"/swagger/{description.GroupName}/swagger.json",
+                        description.GroupName.ToUpperInvariant() ); 
+                }
             });
 
             app.UseHttpsRedirection();

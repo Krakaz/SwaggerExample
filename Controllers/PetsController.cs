@@ -7,15 +7,25 @@ using SwaggerExample.Models.Enums;
 
 namespace SwaggerExample.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("/api/[controller]")]
     [ApiController]
     public class PetsController : ControllerBase
     {
         private readonly List<Pet> pets = new List<Pet>
         {
-                new Pet { Id = 1, Name = "Снуппи", Category = new Category { Id = 1, Name = "Сиамский кот" }, Status = Statuses.Available, Tags = new List<Tag> { new Tag { Id = 1, Name = "Ласковый" }, new Tag { Id = 2, Name = "Игривый" } } },
-                new Pet { Id = 2, Name = "Персиваль", Category = new Category { Id = 5, Name = "Ласка" }, Status = Statuses.Expected, Tags = new List<Tag> { new Tag { Id = 10, Name = "Очень активный" }, new Tag { Id = 2, Name = "Игривый" } } }
-            };
+            new Pet
+            {
+                Id = 1, Name = "Снуппи", Category = new Category { Id = 1, Name = "Сиамский кот" },
+                Status = Statuses.Available,
+                Tags = new List<Tag> { new Tag { Id = 1, Name = "Ласковый" }, new Tag { Id = 2, Name = "Игривый" } }
+            },
+            new Pet
+            {
+                Id = 2, Name = "Персиваль", Category = new Category { Id = 5, Name = "Ласка" },
+                Status = Statuses.Expected,
+                Tags = new List<Tag> { new Tag { Id = 10, Name = "Очень активный" }, new Tag { Id = 2, Name = "Игривый" } }
+            }
+        };
 
         /// <summary>
         /// Запрашивает список всех животных
@@ -25,6 +35,8 @@ namespace SwaggerExample.Controllers
         [HttpGet]
         [Produces("application/json")]
         [ProducesResponseType(200)]
+        [ApiVersion("1.0")]
+        [ApiVersion("2.0")]
         public ActionResult<IEnumerable<Pet>> Get()
         {
             return pets;
@@ -36,8 +48,9 @@ namespace SwaggerExample.Controllers
         /// <returns>Возвращает список животных соответствующих фильтру</returns>
         [HttpPost("find")]
         [Produces("application/json")]
+        [ApiVersion("1.0")]
         [ApiConventionMethod(typeof(SwaggerExampleConventions),
-                     nameof(SwaggerExampleConventions.Find))]
+            nameof(SwaggerExampleConventions.Find))]
         public ActionResult<IEnumerable<Pet>> Get(PetFilter filter)
         {
             return pets.Where(el => el.Name.IndexOf(filter.Name) != -1).ToList();
@@ -56,6 +69,8 @@ namespace SwaggerExample.Controllers
         [Produces("application/json")]
         [ProducesResponseType(200)]
         [ProducesResponseType(typeof(Error), 404)]
+        [ApiVersion("1.0")]
+        [ApiVersion("2.0")]
         public ActionResult<Pet> Get(int id)
         {
             var pet = pets.SingleOrDefault(el => el.Id == id);
@@ -104,6 +119,7 @@ namespace SwaggerExample.Controllers
         [Produces("application/json")]
         [ProducesResponseType(201)]
         [ProducesResponseType(typeof(Error), 400)]
+        [ApiVersion("1.0")]
         public ActionResult<Pet> Post([FromBody] Pet value)
         {
             value.Id = 100;
@@ -124,6 +140,8 @@ namespace SwaggerExample.Controllers
         [Produces("application/json")]
         [ProducesResponseType(200)]
         [ProducesResponseType(typeof(Error), 400)]
+        [ApiVersion("1.0")]
+        [ApiVersion("2.0")]
         public ActionResult<Pet> Put(int id, [FromBody] Pet value)
         {
             return value;
@@ -137,6 +155,8 @@ namespace SwaggerExample.Controllers
         /// <param name="id">Идентификатор животного</param>
         [HttpDelete("{id}")]
         [ProducesResponseType(204)]
+        [ApiVersion("1.0")]
+        [ApiVersion("2.0")]
         public void Delete(int id)
         {
         }
