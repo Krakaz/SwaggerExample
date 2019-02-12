@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using SwaggerExample.Models;
 using SwaggerExample.Models.Conventions;
 using SwaggerExample.Models.Enums;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace SwaggerExample.Controllers
 {
@@ -51,6 +52,7 @@ namespace SwaggerExample.Controllers
         [ApiVersion("1.0")]
         [ApiConventionMethod(typeof(SwaggerExampleConventions),
             nameof(SwaggerExampleConventions.Find))]
+        [SwaggerOperation(Tags = new[] { "Pets", "Filters" })]
         public ActionResult<IEnumerable<Pet>> Get(PetFilter filter)
         {
             return pets.Where(el => el.Name.IndexOf(filter.Name) != -1).ToList();
