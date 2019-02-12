@@ -14,6 +14,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using SwaggerExample.Models;
+using SwaggerExample.Models.Filters;
 using Swashbuckle.AspNetCore.Swagger;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
@@ -70,6 +71,7 @@ namespace SwaggerExample
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
                 c.IncludeXmlComments(xmlPath);
                 c.EnableAnnotations();
+                c.OperationFilter<AppendAuthorizeToSummaryOperationFilter>();
             });
         }
 

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SwaggerExample.Models;
 using SwaggerExample.Models.Conventions;
@@ -53,6 +54,7 @@ namespace SwaggerExample.Controllers
         [ApiConventionMethod(typeof(SwaggerExampleConventions),
             nameof(SwaggerExampleConventions.Find))]
         [SwaggerOperation(Tags = new[] { "Pets", "Filters" })]
+        [Authorize(Roles = "Customer")]
         public ActionResult<IEnumerable<Pet>> Get(PetFilter filter)
         {
             return pets.Where(el => el.Name.IndexOf(filter.Name) != -1).ToList();
